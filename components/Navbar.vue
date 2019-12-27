@@ -13,14 +13,36 @@
         <nuxt-link to="/" class="nav-link">Posts</nuxt-link>
       </li>
     </ul>
+    
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <nuxt-link to="/login" class="nav-link">Login</nuxt-link>
-      </li>
-      <li class="nav-item">
-        <nuxt-link to="/register" class="nav-link">Register</nuxt-link>
-      </li>
-    </ul>
+      <template v-if="!isAuthenticated">
+        <li class="nav-item">
+          <nuxt-link 
+          to="/login" class="nav-link">Login</nuxt-link>
+        </li>
+        <li class="nav-item">
+          <nuxt-link to="/register" class="nav-link">Register</nuxt-link>
+        </li>
+      </template>
+      <template v-if="isAuthenticated">
+         <li class="nav-item">
+          <a class="nav-link">{{ user.name }}</a>
+        </li>
+        <li class="nav-item">
+          <a @click.prevent="logout" href="" class="nav-link">Logout</a>
+        </li>
+      </template>
+    </ul>         
+
   </div>
 </nav>
 </template>
+<script type="text/javascript">
+  export default {
+    methods: {
+      logout() {
+        this.$auth.logout();
+      }
+    }
+  }
+</script>

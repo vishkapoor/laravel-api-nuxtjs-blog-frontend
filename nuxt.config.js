@@ -1,4 +1,3 @@
-
 export default {
   mode: 'universal',
   /*
@@ -49,6 +48,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '@/plugins/mixins/user.js'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -61,13 +61,28 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    baseURL: "http://127.0.0.1:8000/api"
   },
+
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: 'login', method: 'post', propertyName: 'meta.token' },
+          logout: { url: 'logout', method: 'post' },
+          user: { url: 'user', method: 'get', propertyName: 'data' }
+        },
+      }
+    }
+  },
+
   /*
   ** Build configuration
   */

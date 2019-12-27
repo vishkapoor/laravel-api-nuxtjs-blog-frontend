@@ -1,10 +1,12 @@
 <template>
 <div class="container col-md-6 mt-5">
 	<h2>Register</h2>
-	<form>
+	<form @submit.prevent="submit">
 		<div class="form-group">
 	    <label>Full Name</label>
 	    <input type="name" 
+	    	autofocus 
+	    	v-model="form.name"
 	    	class="form-control" 
 	 		placeholder="Enter full name">
 	    <small class="form-text text-danger">
@@ -14,6 +16,7 @@
 	  <div class="form-group">
 	    <label>Email address</label>
 	    <input type="email" 
+	    	v-model.trim="form.email"
 	    	class="form-control" 
 	 		placeholder="Enter email">
 	    <small class="form-text text-danger">
@@ -23,12 +26,14 @@
 	  <div class="form-group">
 	    <label>Password</label>
 	    <input type="password"
+	    	v-model.trim="form.password"
 	    	class="form-control" 
 	    	placeholder="Password">
 	    <small class="form-text text-danger">
 	    	Show errors here
 	    </small>
 	  </div>
+
 	  <button 
 	  	type="submit" 
 	  	class="btn btn-primary">Register</button>
@@ -42,13 +47,30 @@
 <script>
 export default {
 
-  name: 'login',
+  name: 'register',
 
-  data() {
+ data() {
     return {
-
+    	form: {
+    		name: '',
+    		email: '',
+    		password: '',
+    	}
     };
   },
+  methods: {
+  	async submit() {
+  		await this.$axios.post('register', this.form);
+  		await this.$auth.loginWith('local', {
+  			data: {
+  				email: this.form.email,
+  				password: this.form.password
+  			}
+  		});
+
+  		this.$router.push('/');
+  	}
+  }
 };
 </script>
 
