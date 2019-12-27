@@ -9,9 +9,9 @@
 	    	autofocus 
 	    	class="form-control" 
 	 		placeholder="Enter email">
-	    <small class="form-text text-danger">
-	    	Show errors here
-	    </small>
+		    <small v-if="errors.email" class="form-text text-danger">
+		    	{{ errors.email[0] }}
+		    </small>
 	  </div>
 	  <div class="form-group">
 	    <label>Password</label>
@@ -19,8 +19,8 @@
 	    	v-model.trim="form.password"
 	    	class="form-control" 
 	    	placeholder="Password">
-	    <small class="form-text text-danger">
-	    	Show errors here
+	    <small v-if="errors.password" class="form-text text-danger">
+	    	{{ errors.password[0] }}
 	    </small>
 	  </div>
 	  <button 
@@ -35,9 +35,10 @@
 </template>
 <script>
 export default {
-
   name: 'login',
-
+  middleware: [
+  	'guest'
+  ],
   data() {
     return {
     	form: {
@@ -48,11 +49,18 @@ export default {
   },
   methods: {
   	async submit() {
-  		await this.$auth.loginWith("local", {
-  			data: this.form
-  		});
+  		try {
+	  		await this.$auth.loginWith("local", {
+	  			data: this.form
+	  		});
 
-  		this.$router.push('/');
+	  		this.$router.push({
+	  			path: this.$route.query.redirect || "/profile"
+	  		});
+
+  		} catch(e) {
+  			console.log(e);
+  		}
   	}
   }
 };

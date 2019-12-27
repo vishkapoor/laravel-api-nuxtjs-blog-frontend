@@ -48,7 +48,9 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/mixins/user.js'
+    '@/plugins/mixins/user.js',
+    '@/plugins/mixins/validation.js',
+    '@/plugins/axios.js',
   ],
   /*
   ** Nuxt.js dev-modules
@@ -92,5 +94,10 @@ export default {
     */
     extend (config, ctx) {
     }
+  },
+  router: {
+    middleware: [
+      "clearErrors"
+    ]
   }
 }

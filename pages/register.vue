@@ -9,8 +9,8 @@
 	    	v-model="form.name"
 	    	class="form-control" 
 	 		placeholder="Enter full name">
-	    <small class="form-text text-danger">
-	    	Show errors here
+	    <small v-if="errors.name" class="form-text text-danger">
+	    	{{ errors.name[0] }}
 	    </small>
 	  </div>
 	  <div class="form-group">
@@ -19,9 +19,9 @@
 	    	v-model.trim="form.email"
 	    	class="form-control" 
 	 		placeholder="Enter email">
-	    <small class="form-text text-danger">
-	    	Show errors here
-	    </small>
+	    <small v-if="errors.email" class="form-text text-danger">
+		    	{{ errors.email[0] }}
+		</small>
 	  </div>
 	  <div class="form-group">
 	    <label>Password</label>
@@ -29,8 +29,8 @@
 	    	v-model.trim="form.password"
 	    	class="form-control" 
 	    	placeholder="Password">
-	    <small class="form-text text-danger">
-	    	Show errors here
+	    <small v-if="errors.password" class="form-text text-danger">
+	    	{{ errors.password[0] }}
 	    </small>
 	  </div>
 
@@ -46,9 +46,10 @@
 </template>
 <script>
 export default {
-
   name: 'register',
-
+  middleware: [
+  	'guest'
+  ],
  data() {
     return {
     	form: {
@@ -60,15 +61,22 @@ export default {
   },
   methods: {
   	async submit() {
-  		await this.$axios.post('register', this.form);
-  		await this.$auth.loginWith('local', {
-  			data: {
-  				email: this.form.email,
-  				password: this.form.password
-  			}
-  		});
-
-  		this.$router.push('/');
+  		try {
+	  		await this.$axios.post('register', this.form)
+	  		await this.$auth.loginWith('local', {
+	  			data: {
+	  				email: this.form.email,
+	  				password: this.form.password
+	  			}
+	  		});
+  			
+	  		this.$router.push({
+	  			path: this.$route.query.redirect || "/profile"
+	  		});
+  			
+  		} catch(e)  {
+			console.log(e)  			
+  		}
   	}
   }
 };
