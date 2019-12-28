@@ -1,5 +1,5 @@
 <template>
-<div class="container col-md-6 mt-5">
+<div class="container col-md-4  mt-5">
 	<h2>Login</h2>
 	<form @submit.prevent="submit">
 	  <div class="form-group">
@@ -55,7 +55,7 @@ export default {
 	  		});
 
 	  		this.$router.push({
-	  			path: this.$route.query.redirect || "/profile"
+	  			path: this.$route.query.redirect || "/topics"
 	  		});
 
   		} catch(e) {
