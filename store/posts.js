@@ -33,6 +33,13 @@ export const actions = {
   		});
   		dispatch('topics/getTopic', data.topic_id, {root:true});
   	},
+  	 async likePost({dispatch}, post) {
+  		await this.$axios.post('/topics/' 
+  			+ post.topic_id + '/posts/' + post.id + '/likes');
+
+  		dispatch('topics/getTopic', post.topic_id,  {root:true});
+  		dispatch('topics/getTopics', {},  {root:true});
+  	},
   	async update({dispatch}, data) {
   		await this.$axios.patch('/topics/'+ data.topic_id +'/posts/' + data.id, {
   			body: data.body

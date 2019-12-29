@@ -19,7 +19,15 @@
 				</button>
 			</div>
 		</div>
-		<p class="text-muted">{{ post.created_at }} by {{ post.user.name }}</p>
+		<p class="text-muted">
+			{{ post.created_at }} by {{ post.user.name }}
+			<span
+				@click="likePost(post)" 
+				class="btn btn-outline-primary fa fa-thumbs-up">
+				<span class="badge ">{{ post.likes_count }}</span>
+			</span>
+		</p>
+		
 	</div>
 </div>
 </template>
@@ -45,6 +53,28 @@ export default {
   			id: id
   		});
   		alert('Post deleted successfully');
+  	},
+  	async likePost(post) {
+  		const loggedInUser = this.$store.getters['user'];
+  		
+  		if(!loggedInUser) {
+  			this.$router.push('/login');
+  			return;
+  		}
+
+  		if(loggedInUser && loggedInUser.id === post.user.id) {
+  			alert('You cannot like your own post.');
+  			return;
+  		}
+  		if(loggedInUser && post.liked_by_users) {
+  			if(post.liked_by_users.some(user => user.id === loggedInUser.id)) {
+  				alert('You have already liked this post.');
+  				return;
+  			}
+  		}
+
+  		await this.$store.dispatch('posts/likePost', post);
+
   	}
   }
 };
@@ -52,6 +82,7 @@ export default {
 
 <style lang="css" scoped>
 .btn-outline-danger,
+.btn-outline-primary,
 .btn-outline-info {
 	border:none;
 }
